@@ -172,8 +172,8 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 	log.Printf("a_x = %v", a_x)
 
         /* Draw baseline */
-	dc.SetRGB(0.4, 0.4, 0.4)
-	dc.SetLineWidth( 0.0 )
+	dc.SetRGB(0.0, 0.0, 0.0)
+	dc.SetLineWidth( 1.0 )
 	dc.DrawLine( float64(a_x.StartX), float64(a_x.StartY), float64(a_x.StopX), float64(a_x.StopY) )
 	dc.Stroke()
 
@@ -198,8 +198,8 @@ func (c *Chart) RenderAxesY(dc *gg.Context) {
 	log.Printf("a_y = %v", a_y)
 
 	/* Draw baseline */
-	dc.SetRGB(0.4, 0.4, 0.4)
-	dc.SetLineWidth( 0.0 )
+	dc.SetRGB(0.0, 0.0, 0.0)
+	dc.SetLineWidth( 1.0 )
 	dc.DrawLine( float64(a_y.StartX), float64(a_y.StartY), float64(a_y.StopX), float64(a_y.StopY) )
 	dc.Stroke()
 
