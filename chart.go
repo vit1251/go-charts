@@ -136,10 +136,10 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 
 		/* Prepare interval coords */
 		x1 := scaleX * float64(i.StartX)
-		y1 := rect.Bottom - scaleY * float64(i.Y)
+		y1 := float64(rect.Bottom) - scaleY * float64(i.Y)
 
 		x2 := scaleX * float64(i.StopX)
-		y2 := rect.Bottom - scaleY * float64(i.Y)
+		y2 := float64(rect.Bottom) - scaleY * float64(i.Y)
 
 		/* Make clipping */
 		if x1 < 0.0 {
