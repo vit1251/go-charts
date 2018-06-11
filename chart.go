@@ -12,12 +12,16 @@ type Padding struct {
 }
 
 type AxisX struct {
-    width int
-    height int
-    step int /* Default 8 */
-    size int /* Default 8 */
-    marker int /* Default 4 */
-    markerSize int /* Default 16 */
+
+	StartX int
+	StartY int
+	StopX int
+	StopY int
+
+	step int /* Default 8 */
+	size int /* Default 8 */
+	marker int /* Default 4 */
+	markerSize int /* Default 16 */
 
 }
 
@@ -27,6 +31,12 @@ func NewAxisX(c *Chart) (*AxisX) {
 	a_x := &AxisX{}
 
 	/* Setup members */
+	a_x.StartX = c.Padding.Left
+	a_x.StartY = c.height - c.Padding.Bottom
+
+	a_x.StopX = c.width - (c.Padding.Right + c.Padding.Left)
+	a_x.StopY = c.height - c.Padding.Bottom
+
 	a_x.step = 8
 	a_x.size = 8
 	a_x.marker = 4
@@ -36,6 +46,12 @@ func NewAxisX(c *Chart) (*AxisX) {
 }
 
 type AxisY struct {
+
+	StartX int
+	StartY int
+	StopX int
+	StopY int
+
 }
 
 func NewAxisY(c *Chart) (*AxisY) {
@@ -44,6 +60,11 @@ func NewAxisY(c *Chart) (*AxisY) {
 	a_y := &AxisY{}
 
 	/* Setup members */
+	a_y.StartX = c.Padding.Left
+	a_y.StartY = c.Padding.Top
+
+	a_y.StopX = c.Padding.Left
+	a_y.StopY = c.height - (c.Padding.Bottom + c.Padding.Top)
 
 	return a_y
 }
@@ -151,10 +172,10 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 	log.Printf("a_x = %v", a_x)
 
         /* Draw baseline */
-//	dc.SetRGB(0.4, 0.4, 0.4)
-//	dc.SetLineWidth( 0.0 )
-//	dc.DrawLine( float64(a_x.StartX), float64(a_x.StartY), float64(a_x.StopX), float64(a_x.StopY) )
-//	dc.Stroke()
+	dc.SetRGB(0.4, 0.4, 0.4)
+	dc.SetLineWidth( 0.0 )
+	dc.DrawLine( float64(a_x.StartX), float64(a_x.StartY), float64(a_x.StopX), float64(a_x.StopY) )
+	dc.Stroke()
 
         /* Draw smaller scale */
 //        for x in range(axis_x.grid_start_x, axis_x.grid_stop_x, axis_x.step):
@@ -175,6 +196,13 @@ func (c *Chart) RenderAxesY(dc *gg.Context) {
 	/* Create AxisY structure */
 	a_y := NewAxisY(c)
 	log.Printf("a_y = %v", a_y)
+
+	/* Draw baseline */
+	dc.SetRGB(0.4, 0.4, 0.4)
+	dc.SetLineWidth( 0.0 )
+	dc.DrawLine( float64(a_y.StartX), float64(a_y.StartY), float64(a_y.StopX), float64(a_y.StopY) )
+	dc.Stroke()
+
 }
 
 func (c *Chart) RenderAxes(dc *gg.Context) {
