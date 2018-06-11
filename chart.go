@@ -15,6 +15,9 @@ func New(width int32, height int32) (*Chart) {
 	return c
 }
 
+func (c *Chart) RegisterInterval(y int32, start_x int32, stop_y int32) {
+}
+
 func (c *Chart) Render(name string) {
 	dc := gg.NewContext(1000, 1000)
 	dc.DrawCircle(500, 500, 400)
