@@ -92,8 +92,8 @@ func New(width int, height int) (*Chart) {
 
 	/* Setup padding */
 	c.padding.Left = 32
-	c.padding.Right = 8
-	c.padding.Top = 8
+	c.padding.Right = 32
+	c.padding.Top = 32
 	c.padding.Bottom = 32
 
 	return c
