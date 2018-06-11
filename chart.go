@@ -18,10 +18,7 @@ type AxisX struct {
 	StopX int
 	StopY int
 
-	step int /* Default 8 */
-	size int /* Default 8 */
-	marker int /* Default 4 */
-	markerSize int /* Default 16 */
+	Step int
 
 }
 
@@ -37,10 +34,7 @@ func NewAxisX(c *Chart) (*AxisX) {
 	a_x.StopX = c.width - c.padding.Right
 	a_x.StopY = c.height - c.padding.Bottom
 
-	a_x.step = 8
-	a_x.size = 8
-	a_x.marker = 4
-	a_x.markerSize = 16
+	a_x.Step = 8
 
 	return a_x
 }
@@ -51,6 +45,8 @@ type AxisY struct {
 	StartY int
 	StopX int
 	StopY int
+
+	Step int
 
 }
 
@@ -65,6 +61,8 @@ func NewAxisY(c *Chart) (*AxisY) {
 
 	a_y.StopX = c.padding.Left
 	a_y.StopY = c.height - c.padding.Bottom
+
+	a_y.Step = 8
 
 	return a_y
 }
@@ -177,17 +175,23 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 	dc.DrawLine( float64(a_x.StartX), float64(a_x.StartY), float64(a_x.StopX), float64(a_x.StopY) )
 	dc.Stroke()
 
-        /* Draw smaller scale */
-//        for x in range(axis_x.grid_start_x, axis_x.grid_stop_x, axis_x.step):
-//            start = (x, axis_x.start_y)
-//            stop  = (x, axis_x.start_y + axis_x.size)
-//            draw.line([start, stop], fill=axis_x.color, width=0)
+        /* Draw scale */
+	for c_x := a_x.StartX; c_x < a_x.StopX; c_x += a_x.Step {
 
-        /* Draw medium scale */
-//        for x in range(axis_x.grid_start_x, axis_x.grid_stop_x, axis_x.step * axis_x.marker):
-//            start = (x, axis_x.start_y)
-//            stop  = (x, axis_x.start_y + axis_x.marker_size)
-//            draw.line([start, stop], fill=axis_x.color, width=0)
+		/* Prepare step position */
+		x1 := float64(c_x)
+		y1 := float64(a_x.StartY)
+
+		x2 := float64(c_x)
+		y2 := float64(a_x.StartY) + 4.0
+
+		/* Draw risk */
+		dc.SetRGB(0.0, 0.0, 0.0)
+		dc.SetLineWidth( 1.0 )
+		dc.DrawLine( x1, y1, x2, y2 )
+		dc.Stroke()
+
+	}
 
 }
 
@@ -202,6 +206,24 @@ func (c *Chart) RenderAxesY(dc *gg.Context) {
 	dc.SetLineWidth( 1.0 )
 	dc.DrawLine( float64(a_y.StartX), float64(a_y.StartY), float64(a_y.StopX), float64(a_y.StopY) )
 	dc.Stroke()
+
+        /* Draw scale */
+	for c_y := a_y.StartY; c_y < a_y.StopY; c_y += a_y.Step {
+
+		/* Prepare step position */
+		x1 := float64(a_y.StartX)
+		y1 := float64(c_y)
+
+		x2 := float64(a_y.StartX) + 4.0
+		y2 := float64(c_y)
+
+		/* Draw risk */
+		dc.SetRGB(0.0, 0.0, 0.0)
+		dc.SetLineWidth( 1.0 )
+		dc.DrawLine( x1, y1, x2, y2 )
+		dc.Stroke()
+
+	}
 
 }
 
