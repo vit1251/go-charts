@@ -15,7 +15,7 @@ type AxisX struct {
     step int /* Default 8 */
     size int /* Default 8 */
     marker int /* Default 4 */
-    markerSize /* Default 16 */
+    markerSize int /* Default 16 */
     padding Padding
 }
 
