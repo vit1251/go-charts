@@ -31,11 +31,11 @@ func NewAxisX(c *Chart) (*AxisX) {
 	a_x := &AxisX{}
 
 	/* Setup members */
-	a_x.StartX = c.Padding.Left
-	a_x.StartY = c.height - c.Padding.Bottom
+	a_x.StartX = c.padding.Left
+	a_x.StartY = c.height - c.padding.Bottom
 
-	a_x.StopX = c.width - (c.Padding.Right + c.Padding.Left)
-	a_x.StopY = c.height - c.Padding.Bottom
+	a_x.StopX = c.width - (c.padding.Right + c.padding.Left)
+	a_x.StopY = c.height - c.padding.Bottom
 
 	a_x.step = 8
 	a_x.size = 8
@@ -60,11 +60,11 @@ func NewAxisY(c *Chart) (*AxisY) {
 	a_y := &AxisY{}
 
 	/* Setup members */
-	a_y.StartX = c.Padding.Left
-	a_y.StartY = c.Padding.Top
+	a_y.StartX = c.padding.Left
+	a_y.StartY = c.padding.Top
 
-	a_y.StopX = c.Padding.Left
-	a_y.StopY = c.height - (c.Padding.Bottom + c.Padding.Top)
+	a_y.StopX = c.padding.Left
+	a_y.StopY = c.height - (c.padding.Bottom + c.padding.Top)
 
 	return a_y
 }
