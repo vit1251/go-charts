@@ -135,34 +135,42 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 		scaleY := 10.0
 
 		/* Prepare interval coords */
-		x1 := scaleX * float64(i.StartX)
+		x1 := float64(rect.Left) + scaleX * float64(i.StartX)
 		y1 := float64(rect.Bottom) - scaleY * float64(i.Y)
 
-		x2 := scaleX * float64(i.StopX)
+		x2 := float64(rect.Left) + scaleX * float64(i.StopX)
 		y2 := float64(rect.Bottom) - scaleY * float64(i.Y)
 
-		/* Make clipping */
-		if x1 < 0.0 {
-			x1 = 0.0
+		/* Make clipping X coords */
+		if x1 < float64(rect.Left) {
+			x1 = float64(rect.Left)
 		}
-		if x2 < 0.0 {
-			x2 = 0.0
+		if x2 < float64(rect.Left) {
+			x2 = float64(rect.Left)
 		}
-		if x1 > float64(c.width) { /* TODO - Calculate rect with padding ... */
-			x1 = float64(c.width)
+		if x1 > float64(rect.Right) {
+			x1 = float64(rect.Right)
 		}
-		if x2 > float64(c.width) { /* TODO - Calculate rect with padding ... */
-			x2 = float64(c.width)
+		if x2 > float64(rect.Right) {
+			x2 = float64(rect.Right)
 		}
 
-		/* Apply padding */
-		x1 += float64(c.padding.Left)
-		y1 += float64(c.padding.Top)
-		x2 += float64(c.padding.Left)
-		y2 += float64(c.padding.Top)
+		/* Make clipping Y coords */
+		if y1 < float64(rect.Top) {
+			y1 = float64(rect.Top)
+		}
+		if y2 < float64(rect.Top) {
+			y2 = float64(rect.Top)
+		}
+		if y1 > float64(rect.Bottom) {
+			y1 = float64(rect.Bottom)
+		}
+		if y2 > float64(rect.Bottom) {
+			y2 = float64(rect.Bottom)
+		}
 
 		/* Debug message */
-		log.Printf("DrawLine( %f, %f, %f, %f )", x1, y1, x2, y2 )
+//		log.Printf("DrawLine( %f, %f, %f, %f )", x1, y1, x2, y2 )
 
 		/* Draw visible interval */
 		dc.SetRGB(0.4, 0.4, 0.4)
