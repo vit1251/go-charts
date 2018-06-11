@@ -28,9 +28,22 @@ func New(width int, height int) (*Chart) {
 func (c *Chart) RegisterInterval(y int, start_x int, stop_x int) {
 }
 
+func (c *Chart) RenderAxesX(dc *gg.Context) {
+	axis_x := &AxisX{width, height}
+}
+
+func (c *Chart) RenderAxesY(dc *gg.Context) {
+	axis_y := &AxisY{width, height}
+}
+
 func (c *Chart) RenderAxes(dc *gg.Context) {
-	axis_x = &AxisX{width, height}
-	axis_y = &AxisY{width, height}
+
+	/* Draw Acis X */
+	c.RenderAxesX(dc)
+
+	/* Draw Acis Y */
+	c.RenderAxesY(dc)
+
 }
 
 func (c *Chart) RenderValues(dc *gg.Context) {
