@@ -4,6 +4,18 @@ import "log"
 
 import "github.com/fogleman/gg"
 
+type Rect struct {
+	Left int /* Default 16 */
+	Right int /* Default 16 */
+	Top int /* Default 16 */
+	Bottom int /* Default 16 */
+}
+
+func NewRect() (*Rect) {
+	rect := &Rect{}
+	return rect
+}
+
 type Padding struct {
 	Left int /* Default 16 */
 	Right int /* Default 16 */
@@ -108,6 +120,13 @@ func (c *Chart) RegisterInterval(y int, startX int, stopX int) {
 
 func (c *Chart) RenderValues(dc *gg.Context) {
 
+	/* Drawing area */
+	rect := NewRect()
+	rect.Left = c.padding.Left
+	rect.Top = c.padding.Top
+	rect.Right = c.width - c.padding.Right
+	rect.Bottom = c.height - c.padding.Bottom
+
 	/* Draw values */
 	for _, i := range c.intervals {
 
@@ -117,10 +136,10 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 
 		/* Prepare interval coords */
 		x1 := scaleX * float64(i.StartX)
-		y1 := scaleY * float64(i.Y)
+		y1 := rect.Bottom - scaleY * float64(i.Y)
 
 		x2 := scaleX * float64(i.StopX)
-		y2 := scaleY * float64(i.Y)
+		y2 := rect.Bottom - scaleY * float64(i.Y)
 
 		/* Make clipping */
 		if x1 < 0.0 {
@@ -176,14 +195,14 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 	dc.Stroke()
 
         /* Draw scale */
-	for c_x := a_x.StartX; c_x < a_x.StopX; c_x += a_x.Step {
+	for c_x := a_x.StartX + a_x.Step; c_x < a_x.StopX; c_x += a_x.Step {
 
 		/* Prepare step position */
 		x1 := float64(c_x)
 		y1 := float64(a_x.StartY)
 
 		x2 := float64(c_x)
-		y2 := float64(a_x.StartY) + 4.0
+		y2 := float64(a_x.StartY) - 4.0
 
 		/* Draw risk */
 		dc.SetRGB(0.0, 0.0, 0.0)
@@ -208,7 +227,7 @@ func (c *Chart) RenderAxesY(dc *gg.Context) {
 	dc.Stroke()
 
         /* Draw scale */
-	for c_y := a_y.StartY; c_y < a_y.StopY; c_y += a_y.Step {
+	for c_y := a_y.StartY + a_y.Step; c_y < a_y.StopY; c_y += a_y.Step {
 
 		/* Prepare step position */
 		x1 := float64(a_y.StartX)
