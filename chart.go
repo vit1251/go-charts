@@ -1,5 +1,7 @@
 package chart
 
+import "log"
+
 import "github.com/fogleman/gg"
 
 type Padding struct {
@@ -19,7 +21,7 @@ type AxisX struct {
 
 }
 
-func NewAxisX() (*AxisX) {
+func NewAxisX(c *Chart) (*AxisX) {
 
 	/* Create new axis instance */
 	a_x := &AxisX{}
@@ -36,7 +38,7 @@ func NewAxisX() (*AxisX) {
 type AxisY struct {
 }
 
-func NewAxisY() (*AxisY) {
+func NewAxisY(c *Chart) (*AxisY) {
 
 	/* Create new axis instance */
 	a_y := &AxisY{}
@@ -142,10 +144,14 @@ func (c *Chart) RendexGridX(dc *gg.Context) {
 func (c *Chart) RenderAxesX(dc *gg.Context) {
 
 	/* Create AxisX structure */
-	a_x := NewAxisX()
+	a_x := NewAxisX(c)
+	log.Printf("a_x = %v", a_x)
 
         /* Draw baseline */
-//        draw.line([(axis_x.start_x, axis_x.start_y), (axis_x.stop_x, axis_x.stop_y)], fill=axis_x.color, width=0)
+//	dc.SetRGB(0.4, 0.4, 0.4)
+//	dc.SetLineWidth( 0.0 )
+//	dc.DrawLine( float64(a_x.StartX), float64(a_x.StartY), float64(a_x.StopX), float64(a_x.StopY) )
+//	dc.Stroke()
 
         /* Draw smaller scale */
 //        for x in range(axis_x.grid_start_x, axis_x.grid_stop_x, axis_x.step):
@@ -164,8 +170,8 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 func (c *Chart) RenderAxesY(dc *gg.Context) {
 
 	/* Create AxisY structure */
-	a_y := NewAxisY()
-
+	a_y := NewAxisY(c)
+	log.Printf("a_y = %v", a_y)
 }
 
 func (c *Chart) RenderAxes(dc *gg.Context) {
