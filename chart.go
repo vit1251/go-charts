@@ -194,7 +194,7 @@ func (c *Chart) Render(name string) {
 	dc := gg.NewContext(c.width, c.height)
 
 	/* Clear image */
-	dc.SetRGB(255, 255, 255)
+	dc.SetRGB(1.0, 1.0, 1.0)
 	dc.Clear()
 
 	/* Create and draw grids*/
