@@ -102,23 +102,29 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 		y2 := scaleY * float64(i.Y)
 
 		/* Make clipping */
-		if x1 < 0 {
-			x1 = 0
+		if x1 < 0.0 {
+			x1 = 0.0
 		}
-		if x2 < 0 {
-			x2 = 0
+		if x2 < 0.0 {
+			x2 = 0.0
 		}
-		if x1 > c.width { /* TODO - Calculate rect with padding ... */
-			x1 = c.width
+		if x1 > float64(c.width) { /* TODO - Calculate rect with padding ... */
+			x1 = float64(c.width)
 		}
-		if x2 > c.width { /* TODO - Calculate rect with padding ... */
-			x2 = c.width
+		if x2 > float64(c.width) { /* TODO - Calculate rect with padding ... */
+			x2 = float64(c.width)
 		}
+
+		/* Apply padding */
+		x1 += float64(c.padding.Left)
+		y1 += float64(c.padding.Top)
+		x2 += float64(c.padding.Left)
+		y2 += float64(c.padding.Top)
 
 		/* Draw visible interval */
 		dc.SetRGB(0.4, 0.4, 0.4)
 		dc.SetLineWidth( 3 )
-		dc.DrawLine( c.padding.Left + x1, c.padding.Top + y1, c.padding.Left + x2, c.padding.Top + y2)
+		dc.DrawLine( x1, y1, x2, y2 )
 		dc.Stroke()
 	}
 }
