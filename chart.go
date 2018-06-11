@@ -3,21 +3,21 @@ package chart
 import "github.com/fogleman/gg"
 
 type AxisX struct {
-	width int32
-	height int32
+	width int
+	height int
 }
 
 type AxisY struct {
-	width int32
-	height int32
+	width int
+	height int
 }
 
 type Chart struct {
-	width int32
-	height int32
+	width int
+	height int
 }
 
-func New(width int32, height int32) (*Chart) {
+func New(width int, height int) (*Chart) {
 	c := &Chart{
 		width: width,
 		height: height,
@@ -25,7 +25,7 @@ func New(width int32, height int32) (*Chart) {
 	return c
 }
 
-func (c *Chart) RegisterInterval(y int32, start_x int32, stop_y int32) {
+func (c *Chart) RegisterInterval(y int, start_x int, stop_y int) {
 }
 
 func (c *Chart) RenderAxes(int dc, a_x *AxisX, a_y *AxisY) {
