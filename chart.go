@@ -93,8 +93,8 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 	for _, i := range c.intervals {
 
 		/* Calculate scale */
-		scaleX := 1.0
-		scaleY := 1.0
+		scaleX := 10.0
+		scaleY := 10.0
 
 		/* Prepare interval coords */
 		x1 := scaleX * float64(i.StartX)
@@ -122,6 +122,9 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 		y1 += float64(c.padding.Top)
 		x2 += float64(c.padding.Left)
 		y2 += float64(c.padding.Top)
+
+		/* Debug message */
+		log.Printf("DrawLine( %f, %f, %f, %f )", x1, y1, x2, y2 )
 
 		/* Draw visible interval */
 		dc.SetRGB(0.4, 0.4, 0.4)
