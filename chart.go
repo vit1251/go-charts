@@ -25,15 +25,15 @@ func New(width int, height int) (*Chart) {
 	return c
 }
 
-func (c *Chart) RegisterInterval(y int, start_x int, stop_y int) {
+func (c *Chart) RegisterInterval(y int, start_x int, stop_x int) {
 }
 
-func (c *Chart) RenderAxes(dc int, a_x *AxisX, a_y *AxisY) {
+func (c *Chart) RenderAxes(dc *gg.Context) {
 	axis_x = &AxisX{width, height}
 	axis_y = &AxisY{width, height}
 }
 
-func (c *Chart) RenderValues(dc int) {
+func (c *Chart) RenderValues(dc *gg.Context) {
 	dc.SetRGB(0, 0, 0)
 	dc.Fill()
 }
