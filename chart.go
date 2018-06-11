@@ -51,7 +51,7 @@ type Interval struct {
 type Chart struct {
 	width int
 	height int
-	intervals Interval[]
+	intervals []Interval
 }
 
 func New(width int, height int) (*Chart) {
