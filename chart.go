@@ -34,7 +34,7 @@ func NewAxisX(c *Chart) (*AxisX) {
 	a_x.StartX = c.padding.Left
 	a_x.StartY = c.height - c.padding.Bottom
 
-	a_x.StopX = c.width - (c.padding.Right + c.padding.Left)
+	a_x.StopX = c.width - c.padding.Right
 	a_x.StopY = c.height - c.padding.Bottom
 
 	a_x.step = 8
@@ -64,7 +64,7 @@ func NewAxisY(c *Chart) (*AxisY) {
 	a_y.StartY = c.padding.Top
 
 	a_y.StopX = c.padding.Left
-	a_y.StopY = c.height - (c.padding.Bottom + c.padding.Top)
+	a_y.StopY = c.height - c.padding.Bottom
 
 	return a_y
 }
