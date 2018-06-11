@@ -33,13 +33,23 @@ func NewAxisX() (*AxisX) {
 	/* Setup padding */
 	a_x.padding.Left = 32
 	a_x.padding.Right = 8
-        a_x.padding.Ttop = 8
-        a_x.padding.Bottom = 32
+	a_x.padding.Top = 8
+	a_x.padding.Bottom = 32
 
 	return a_x
 }
 
 type AxisY struct {
+}
+
+func NewAxisY() (*AxisY) {
+
+	/* Create new axis instance */
+	a_y := &AxisY{}
+
+	/* Setup members */
+
+	return a_y
 }
 
 type Interval struct {
@@ -96,6 +106,7 @@ func (c *Chart) RendexGridX(dc *gg.Context) {
 
 func (c *Chart) RenderAxesX(dc *gg.Context) {
 
+	/* Create AxisX structure */
 	a_x := NewAxisX()
 
         /* Draw baseline */
@@ -116,7 +127,10 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 }
 
 func (c *Chart) RenderAxesY(dc *gg.Context) {
-	axis_y := &AxisY{c.width, c.height}
+
+	/* Create AxisY structure */
+	a_y := NewAxisY()
+
 }
 
 func (c *Chart) RenderAxes(dc *gg.Context) {
