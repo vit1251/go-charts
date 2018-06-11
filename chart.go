@@ -16,7 +16,7 @@ type AxisX struct {
     size int /* Default 8 */
     marker int /* Default 4 */
     markerSize int /* Default 16 */
-    padding Padding
+
 }
 
 func NewAxisX() (*AxisX) {
@@ -29,12 +29,6 @@ func NewAxisX() (*AxisX) {
 	a_x.size = 8
 	a_x.marker = 4
 	a_x.markerSize = 16
-
-	/* Setup padding */
-	a_x.padding.Left = 32
-	a_x.padding.Right = 8
-	a_x.padding.Top = 8
-	a_x.padding.Bottom = 32
 
 	return a_x
 }
@@ -61,14 +55,24 @@ type Interval struct {
 type Chart struct {
 	width int
 	height int
+	padding Padding
 	intervals []Interval
 }
 
 func New(width int, height int) (*Chart) {
+
+	/* Create chart instance */
 	c := &Chart{
 		width: width,
 		height: height,
 	}
+
+	/* Setup padding */
+	c.padding.Left = 32
+	c.padding.Right = 8
+	c.padding.Top = 8
+	c.padding.Bottom = 32
+
 	return c
 }
 
@@ -83,14 +87,39 @@ func (c *Chart) RegisterInterval(y int, startX int, stopX int) {
 
 func (c *Chart) RenderValues(dc *gg.Context) {
 
-	dc.SetRGB(0, 0, 0)
-	dc.Fill()
-
 	/* Draw values */
 	for _, i := range c.intervals {
-//        start = (axis_x.grid_start_x + axis_x.step * value_start_x, axis_x.grid_stop_y - axis_x.step * value_y)
-//        stop = (axis_x.grid_start_x + axis_x.step * value_stop_x, axis_x.grid_stop_y - axis_x.step * value_y)
-//        draw.line([start, stop], fill=color, width=3)
+
+		/* Calculate scale */
+		scaleX := 1.0
+		scaleY := 1.0
+
+		/* Prepare interval coords */
+		x1 := scaleX * i.startX
+		y1 := scaleY * i.Y
+
+		x2 := scaleX * i.stopX
+		y2 := scaleY * i.Y
+
+		/* Make clipping */
+		if x1 < 0 {
+			x1 = 0
+		}
+		if x2 < 0 {
+			x2 = 0
+		}
+		if x1 > c.width { /* TODO - Calculate rect with padding ... */
+			x1 = c.width
+		}
+		if x2 > c.width { /* TODO - Calculate rect with padding ... */
+			x2 = c.width
+		}
+
+		/* Draw visible interval */
+		dc.SetRGB(0.4, 0.4, 0.4)
+		dc.SetLineWidth( 3 )
+		dc.DrawLine( c.padding.Left + x1, c.padding.Top + y1, c.padding.Left + x2, c.padding.Top + y2)
+		dc.Stroke()
 	}
 }
 
@@ -148,6 +177,12 @@ func (c *Chart) Render(name string) {
 
 	/* Create new drawing canvas */
 	dc := gg.NewContext(c.width, c.height)
+
+	/* Clear image */
+	dc.SetRGB(255, 255, 255)
+	dc.Clear()
+
+	/* Create and draw grids*/
 
 	/* Create and draw axis */
 	c.RenderAxes(dc)
