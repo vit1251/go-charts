@@ -200,7 +200,7 @@ func (c *Chart) RendexGrids(dc *gg.Context) {
 		y1 := float64(rect.Top)
 
 		x2 := float64(c_x)
-		y1 := float64(rect.Bottom)
+		y2 := float64(rect.Bottom)
 
 		/* Draw grid */
 		dc.SetRGB(0.4, 0.4, 0.4)
@@ -210,14 +210,14 @@ func (c *Chart) RendexGrids(dc *gg.Context) {
 	}
 
 	/* Draw grid on Y */
-	for c_y := rect.Top; c_y < rect.Bottom; c_x += gridSize {
+	for c_y := rect.Top; c_y < rect.Bottom; c_y += gridSize {
 
 		/* Prepare parameters */
 		x1 := float64(rect.Left)
 		y1 := float64(c_y)
 
 		x2 := float64(rect.Right)
-		y1 := float64(c_y)
+		y2 := float64(c_y)
 
 		/* Draw grid */
 		dc.SetRGB(0.4, 0.4, 0.4)
