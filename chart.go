@@ -180,15 +180,54 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 	}
 }
 
-func (c *Chart) RendexGridX(dc *gg.Context) {
+func (c *Chart) RendexGrids(dc *gg.Context) {
 
-    /* Draw grid on X */
-//    for x in range(axis_x.grid_start_x, axis_x.grid_stop_x, axis_x.step * axis_x.marker):
-//        start = (x, 50)
-//        stop  = (x, axis_x.start_y)
-//        draw.line([start, stop], fill=axis_x.grid_color, width=0)
+	/* Drawing area */
+	rect := NewRect()
+	rect.Left = c.padding.Left
+	rect.Top = c.padding.Top
+	rect.Right = c.width - c.padding.Right
+	rect.Bottom = c.height - c.padding.Bottom
+
+	/* Grid size */
+	gridSize := 16
+
+	/* Draw grid on X */
+	for c_x := rect.Left + gridSize; c_x < rect.Right; c_x += gridSize {
+
+		/* Prepare parameters */
+		x1 := float64(c_x)
+		y1 := float64(rect.Top)
+
+		x2 := float64(c_x)
+		y1 := float64(rect.Bottom)
+
+		/* Draw grid */
+		dc.SetRGB(0.4, 0.4, 0.4)
+		dc.SetLineWidth( 1 )
+		dc.DrawLine( x1, y1, x2, y2 )
+		dc.Stroke()
+	}
+
+	/* Draw grid on Y */
+	for c_y := rect.Top; c_y < rect.Bottom; c_x += gridSize {
+
+		/* Prepare parameters */
+		x1 := float64(rect.Left)
+		y1 := float64(c_y)
+
+		x2 := float64(rect.Right)
+		y1 := float64(c_y)
+
+		/* Draw grid */
+		dc.SetRGB(0.4, 0.4, 0.4)
+		dc.SetLineWidth( 1 )
+		dc.DrawLine( x1, y1, x2, y2 )
+		dc.Stroke()
+	}
 
 }
+
 
 func (c *Chart) RenderAxesX(dc *gg.Context) {
 
@@ -275,6 +314,7 @@ func (c *Chart) Render(name string) {
 	dc.Clear()
 
 	/* Create and draw grids*/
+	c.RenderGrids(dc)
 
 	/* Create and draw axis */
 	c.RenderAxes(dc)
