@@ -239,7 +239,7 @@ func (c *Chart) RenderGrids(dc *gg.Context) {
 		}
 
 		/* Draw grid on Y */
-		for c_y := rect.Top; c_y < rect.Bottom; c_y += c.grid.ScaleY {
+		for c_y := rect.Top + c.grid.ScaleY; c_y < rect.Bottom; c_y += c.grid.ScaleY {
 
 			/* Prepare parameters */
 			x1 := float64(rect.Left)
