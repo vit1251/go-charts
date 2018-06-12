@@ -334,6 +334,41 @@ func (c *Chart) RenderAxes(dc *gg.Context) {
 
 }
 
+func (c *Chart) RenderBorder(dc *gg.Context) {
+
+	/* Drawing area */
+	rect := NewRect()
+	rect.Left = c.padding.Left
+	rect.Top = c.padding.Top
+	rect.Right = c.size.Width - c.padding.Right
+	rect.Bottom = c.size.Height - c.padding.Bottom
+
+	/* Top border  */
+	dc.SetRGB(0.0, 0.0, 0.0)
+	dc.SetLineWidth( 1.0 )
+	dc.DrawLine( float64(rect.Left), float64(rect.Top), float64(rect.Right), float64(rect.Top) )
+	dc.Stroke()
+
+	/* Bottom border  */
+	dc.SetRGB(0.0, 0.0, 0.0)
+	dc.SetLineWidth( 1.0 )
+	dc.DrawLine( float64(rect.Left), float64(rect.Bottom), float64(rect.Right), float64(rect.Bottom) )
+	dc.Stroke()
+
+	/* Left border  */
+	dc.SetRGB(0.0, 0.0, 0.0)
+	dc.SetLineWidth( 1.0 )
+	dc.DrawLine( float64(rect.Left), float64(rect.Top), float64(rect.Left), float64(rect.Bottom) )
+	dc.Stroke()
+
+	/* Right border  */
+	dc.SetRGB(0.0, 0.0, 0.0)
+	dc.SetLineWidth( 1.0 )
+	dc.DrawLine( float64(rect.Right), float64(rect.Top), float64(rect.Right), float64(rect.Bottom) )
+	dc.Stroke()
+
+}
+
 
 func (c *Chart) Render(name string) {
 
@@ -352,6 +387,9 @@ func (c *Chart) Render(name string) {
 
 	/* Draw values */
 	c.RenderValues(dc)
+
+	/* Draw chart border */
+	c.RenderBorder(dc)
 
 	/* Store chart */
 	dc.SavePNG(name)
