@@ -85,26 +85,47 @@ type Interval struct {
 	StopX int
 }
 
+type Grid struct {
+	ScaleX int
+	ScaleY int
+}
+
+func NewGrid() *Grid {
+	g := &Grid{}
+	g.ScaleX = 16
+	g.ScaleY = 16
+	return g
+}
+
+type Size struct {
+	Width int
+	Height int
+}
+
 type Chart struct {
-	width int
-	height int
+	size Size
 	padding Padding
 	intervals []Interval
+	grid *Grid
 }
 
 func New(width int, height int) (*Chart) {
 
 	/* Create chart instance */
-	c := &Chart{
-		width: width,
-		height: height,
-	}
+	c := &Chart{}
+
+	/* Setup size */
+	c.size.Width = width
+	c.size.Height = height
 
 	/* Setup padding */
 	c.padding.Left = 32
 	c.padding.Right = 32
 	c.padding.Top = 32
 	c.padding.Bottom = 32
+
+	/* Setup grid */
+	c.grid = NewGrid()
 
 	return c
 }
@@ -124,8 +145,8 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 	rect := NewRect()
 	rect.Left = c.padding.Left
 	rect.Top = c.padding.Top
-	rect.Right = c.width - c.padding.Right
-	rect.Bottom = c.height - c.padding.Bottom
+	rect.Right = c.size.Width - c.padding.Right
+	rect.Bottom = c.size.Height - c.padding.Bottom
 
 	/* Draw values */
 	for _, i := range c.intervals {
@@ -186,44 +207,45 @@ func (c *Chart) RenderGrids(dc *gg.Context) {
 	rect := NewRect()
 	rect.Left = c.padding.Left
 	rect.Top = c.padding.Top
-	rect.Right = c.width - c.padding.Right
-	rect.Bottom = c.height - c.padding.Bottom
+	rect.Right = c.size.Width - c.padding.Right
+	rect.Bottom = c.size.Height - c.padding.Bottom
 
 	/* Grid size */
-	gridSize := 16
+	if c.grid != nil {
 
-	/* Draw grid on X */
-	for c_x := rect.Left + gridSize; c_x < rect.Right; c_x += gridSize {
+		/* Draw grid on X */
+		for c_x := rect.Left + c.grid.ScaleX; c_x < rect.Right; c_x += c.grid.ScaleX {
 
-		/* Prepare parameters */
-		x1 := float64(c_x)
-		y1 := float64(rect.Top)
+			/* Prepare parameters */
+			x1 := float64(c_x)
+			y1 := float64(rect.Top)
 
-		x2 := float64(c_x)
-		y2 := float64(rect.Bottom)
+			x2 := float64(c_x)
+			y2 := float64(rect.Bottom)
 
-		/* Draw grid */
-		dc.SetRGB(0.4, 0.4, 0.4)
-		dc.SetLineWidth( 1 )
-		dc.DrawLine( x1, y1, x2, y2 )
-		dc.Stroke()
-	}
+			/* Draw grid */
+			dc.SetRGB(0.4, 0.4, 0.4)
+			dc.SetLineWidth( 1 )
+			dc.DrawLine( x1, y1, x2, y2 )
+			dc.Stroke()
+		}
 
-	/* Draw grid on Y */
-	for c_y := rect.Top; c_y < rect.Bottom; c_y += gridSize {
+		/* Draw grid on Y */
+		for c_y := rect.Top; c_y < rect.Bottom; c_y += c.grid.ScaleY {
 
-		/* Prepare parameters */
-		x1 := float64(rect.Left)
-		y1 := float64(c_y)
+			/* Prepare parameters */
+			x1 := float64(rect.Left)
+			y1 := float64(c_y)
 
-		x2 := float64(rect.Right)
-		y2 := float64(c_y)
+			x2 := float64(rect.Right)
+			y2 := float64(c_y)
 
-		/* Draw grid */
-		dc.SetRGB(0.4, 0.4, 0.4)
-		dc.SetLineWidth( 1 )
-		dc.DrawLine( x1, y1, x2, y2 )
-		dc.Stroke()
+			/* Draw grid */
+			dc.SetRGB(0.4, 0.4, 0.4)
+			dc.SetLineWidth( 1 )
+			dc.DrawLine( x1, y1, x2, y2 )
+			dc.Stroke()
+		}
 	}
 
 }
@@ -233,6 +255,7 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 
 	/* Create AxisX structure */
 	a_x := NewAxisX(c)
+
 	log.Printf("a_x = %v", a_x)
 
         /* Draw baseline */
@@ -307,7 +330,7 @@ func (c *Chart) RenderAxes(dc *gg.Context) {
 func (c *Chart) Render(name string) {
 
 	/* Create new drawing canvas */
-	dc := gg.NewContext(c.width, c.height)
+	dc := gg.NewContext(c.size.Width, c.size.Height)
 
 	/* Clear image */
 	dc.SetRGB(1.0, 1.0, 1.0)
