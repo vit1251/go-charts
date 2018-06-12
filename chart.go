@@ -180,7 +180,7 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 	}
 }
 
-func (c *Chart) RendexGrids(dc *gg.Context) {
+func (c *Chart) RenderGrids(dc *gg.Context) {
 
 	/* Drawing area */
 	rect := NewRect()
