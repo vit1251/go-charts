@@ -202,7 +202,7 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 //		log.Printf("DrawLine( %f, %f, %f, %f )", x1, y1, x2, y2 )
 
 		/* Draw visible interval */
-		dc.SetRGB(0.4, 0.4, 0.4)
+		dc.SetRGB(0.0, 0.0, 1.0)
 		dc.SetLineWidth( 3 )
 		dc.DrawLine( x1, y1, x2, y2 )
 		dc.Stroke()
