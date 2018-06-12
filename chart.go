@@ -151,13 +151,16 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 	/* Draw values */
 	for _, i := range c.intervals {
 
+		var scaleX float64
+		var scaleY float64
+
 		/* Calculate scale */
 		if c.grid != nil {
-			scaleX := c.grid.ScaleX
-			scaleY := c.grid.ScaleY
+			scaleX = float64(c.grid.ScaleX)
+			scaleY = float64(c.grid.ScaleY)
 		} else {
-			scaleX := 8.0
-			scaleY := 8.0
+			scaleX = float64(8.0)
+			scaleY = float64(8.0)
 		}
 
 		/* Prepare interval coords */
