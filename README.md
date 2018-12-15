@@ -1,3 +1,5 @@
 # go-charts
 
-GoCharts is simple chart Go implementation
+`go-charts` is simple pixel precision Go chart implementation
+
+![Example](/chart.png?raw=true)
