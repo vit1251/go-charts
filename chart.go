@@ -1,8 +1,9 @@
 package chart
 
-import "log"
-
-import "github.com/fogleman/gg"
+import (
+	"github.com/fogleman/gg"
+	"log"
+)
 
 type Rect struct {
 	Left int /* Default 16 */
@@ -112,7 +113,7 @@ type Chart struct {
 func New(width int, height int) (*Chart) {
 
 	/* Create chart instance */
-	c := &Chart{}
+	c := new(Chart)
 
 	/* Setup size */
 	c.size.Width = width
