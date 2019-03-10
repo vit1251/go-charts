@@ -1,7 +1,7 @@
 package chart
 
 import (
-	"github.com/fogleman/gg"
+	gg "github.com/vit1251/go-charts/pixelman"
 	"log"
 )
 
@@ -47,7 +47,7 @@ func NewAxisX(c *Chart) (*AxisX) {
 	a_x.StopX = c.size.Width - c.padding.Right
 	a_x.StopY = c.size.Height - c.padding.Bottom
 
-	a_x.Step = 8
+	a_x.Step = 16
 
 	return a_x
 }
@@ -75,7 +75,7 @@ func NewAxisY(c *Chart) (*AxisY) {
 	a_y.StopX = c.padding.Left
 	a_y.StopY = c.size.Height - c.padding.Bottom
 
-	a_y.Step = 8
+	a_y.Step = 16
 
 	return a_y
 }
@@ -108,6 +108,7 @@ type Chart struct {
 	padding Padding
 	intervals []Interval
 	grid *Grid
+	scale uint8
 }
 
 func New(width int, height int) (*Chart) {
@@ -127,6 +128,9 @@ func New(width int, height int) (*Chart) {
 
 	/* Setup grid */
 	c.grid = NewGrid()
+
+	/* Setup scale */
+	c.scale = 8
 
 	return c
 }
@@ -152,59 +156,55 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 	/* Draw values */
 	for _, i := range c.intervals {
 
-		var scaleX float64
-		var scaleY float64
+		var scaleX int
+		var scaleY int
 
 		/* Calculate scale */
 		if c.grid != nil {
-			scaleX = float64(c.grid.ScaleX)
-			scaleY = float64(c.grid.ScaleY)
+			scaleX = c.grid.ScaleX
+			scaleY = c.grid.ScaleY
 		} else {
-			scaleX = float64(8.0)
-			scaleY = float64(8.0)
+			scaleX = 8
+			scaleY = 8
 		}
 
 		/* Prepare interval coords */
-		x1 := float64(rect.Left) + scaleX * float64(i.StartX)
-		y1 := float64(rect.Bottom) - scaleY * float64(i.Y)
+		x1 := rect.Left + scaleX * i.StartX
+		y1 := rect.Bottom - scaleY * i.Y
 
-		x2 := float64(rect.Left) + scaleX * float64(i.StopX)
-		y2 := float64(rect.Bottom) - scaleY * float64(i.Y)
+		x2 := rect.Left + scaleX * i.StopX
+		y2 := rect.Bottom - scaleY * i.Y
 
 		/* Make clipping X coords */
-		if x1 < float64(rect.Left) {
-			x1 = float64(rect.Left)
+		if x1 < rect.Left {
+			x1 = rect.Left
 		}
-		if x2 < float64(rect.Left) {
-			x2 = float64(rect.Left)
+		if x2 < rect.Left {
+			x2 = rect.Left
 		}
-		if x1 > float64(rect.Right) {
-			x1 = float64(rect.Right)
+		if x1 > rect.Right {
+			x1 = rect.Right
 		}
-		if x2 > float64(rect.Right) {
-			x2 = float64(rect.Right)
+		if x2 > rect.Right {
+			x2 = rect.Right
 		}
 
 		/* Make clipping Y coords */
-		if y1 < float64(rect.Top) {
-			y1 = float64(rect.Top)
+		if y1 < rect.Top {
+			y1 = rect.Top
 		}
-		if y2 < float64(rect.Top) {
-			y2 = float64(rect.Top)
+		if y2 < rect.Top {
+			y2 = rect.Top
 		}
-		if y1 > float64(rect.Bottom) {
-			y1 = float64(rect.Bottom)
+		if y1 > rect.Bottom {
+			y1 = rect.Bottom
 		}
-		if y2 > float64(rect.Bottom) {
-			y2 = float64(rect.Bottom)
+		if y2 > rect.Bottom {
+			y2 = rect.Bottom
 		}
-
-		/* Debug message */
-//		log.Printf("DrawLine( %f, %f, %f, %f )", x1, y1, x2, y2 )
 
 		/* Draw visible interval */
-		dc.SetRGB(0.0, 0.0, 1.0)
-		dc.SetLineWidth( 3 )
+		dc.SetRGB( 128, 0, 0 )
 		dc.DrawLine( x1, y1, x2, y2 )
 		dc.Stroke()
 	}
@@ -226,14 +226,14 @@ func (c *Chart) RenderGrids(dc *gg.Context) {
 		for c_x := rect.Left + c.grid.ScaleX; c_x < rect.Right; c_x += c.grid.ScaleX {
 
 			/* Prepare parameters */
-			x1 := float64(c_x)
-			y1 := float64(rect.Top)
+			x1 := c_x
+			y1 := rect.Top
 
-			x2 := float64(c_x)
-			y2 := float64(rect.Bottom)
+			x2 := c_x
+			y2 := rect.Bottom
 
 			/* Draw grid */
-			dc.SetRGB(0.4, 0.4, 0.4)
+			dc.SetRGB(192, 192, 192)
 			dc.SetLineWidth( 1 )
 			dc.DrawLine( x1, y1, x2, y2 )
 			dc.Stroke()
@@ -243,14 +243,14 @@ func (c *Chart) RenderGrids(dc *gg.Context) {
 		for c_y := rect.Top + c.grid.ScaleY; c_y < rect.Bottom; c_y += c.grid.ScaleY {
 
 			/* Prepare parameters */
-			x1 := float64(rect.Left)
-			y1 := float64(c_y)
+			x1 := rect.Left
+			y1 := c_y
 
-			x2 := float64(rect.Right)
-			y2 := float64(c_y)
+			x2 := rect.Right
+			y2 := c_y
 
 			/* Draw grid */
-			dc.SetRGB(0.4, 0.4, 0.4)
+			dc.SetRGB(192, 192, 192)
 			dc.SetLineWidth( 1 )
 			dc.DrawLine( x1, y1, x2, y2 )
 			dc.Stroke()
@@ -268,24 +268,24 @@ func (c *Chart) RenderAxesX(dc *gg.Context) {
 	log.Printf("a_x = %v", a_x)
 
         /* Draw baseline */
-	dc.SetRGB(0.0, 0.0, 0.0)
-	dc.SetLineWidth( 1.0 )
-	dc.DrawLine( float64(a_x.StartX), float64(a_x.StartY), float64(a_x.StopX), float64(a_x.StopY) )
+	dc.SetRGB(0, 0, 0)
+	dc.SetLineWidth( 1 )
+	dc.DrawLine( a_x.StartX, a_x.StartY, a_x.StopX, a_x.StopY )
 	dc.Stroke()
 
         /* Draw scale */
 	for c_x := a_x.StartX + a_x.Step; c_x < a_x.StopX; c_x += a_x.Step {
 
 		/* Prepare step position */
-		x1 := float64(c_x)
-		y1 := float64(a_x.StartY)
+		x1 := c_x
+		y1 := a_x.StartY
 
-		x2 := float64(c_x)
-		y2 := float64(a_x.StartY) - 4.0
+		x2 := c_x
+		y2 := a_x.StartY - 4
 
 		/* Draw risk */
-		dc.SetRGB(0.0, 0.0, 0.0)
-		dc.SetLineWidth( 1.0 )
+		dc.SetRGB(0, 0, 0)
+		dc.SetLineWidth( 1 )
 		dc.DrawLine( x1, y1, x2, y2 )
 		dc.Stroke()
 
@@ -300,24 +300,24 @@ func (c *Chart) RenderAxesY(dc *gg.Context) {
 	log.Printf("a_y = %v", a_y)
 
 	/* Draw baseline */
-	dc.SetRGB(0.0, 0.0, 0.0)
-	dc.SetLineWidth( 1.0 )
-	dc.DrawLine( float64(a_y.StartX), float64(a_y.StartY), float64(a_y.StopX), float64(a_y.StopY) )
+	dc.SetRGB(0, 0, 0)
+	dc.SetLineWidth( 1 )
+	dc.DrawLine( a_y.StartX, a_y.StartY, a_y.StopX, a_y.StopY )
 	dc.Stroke()
 
         /* Draw scale */
 	for c_y := a_y.StartY + a_y.Step; c_y < a_y.StopY; c_y += a_y.Step {
 
 		/* Prepare step position */
-		x1 := float64(a_y.StartX)
-		y1 := float64(c_y)
+		x1 := a_y.StartX
+		y1 := c_y
 
-		x2 := float64(a_y.StartX) + 4.0
-		y2 := float64(c_y)
+		x2 := a_y.StartX + 4.0
+		y2 := c_y
 
 		/* Draw risk */
-		dc.SetRGB(0.0, 0.0, 0.0)
-		dc.SetLineWidth( 1.0 )
+		dc.SetRGB( 0, 0, 0 )
+		dc.SetLineWidth( 1 )
 		dc.DrawLine( x1, y1, x2, y2 )
 		dc.Stroke()
 
@@ -345,27 +345,27 @@ func (c *Chart) RenderBorder(dc *gg.Context) {
 	rect.Bottom = c.size.Height - c.padding.Bottom
 
 	/* Top border  */
-	dc.SetRGB(0.0, 0.0, 0.0)
-	dc.SetLineWidth( 1.0 )
-	dc.DrawLine( float64(rect.Left), float64(rect.Top), float64(rect.Right), float64(rect.Top) )
+	dc.SetRGB(0, 0, 0)
+	dc.SetLineWidth( 1 )
+	dc.DrawLine( rect.Left, rect.Top, rect.Right, rect.Top )
 	dc.Stroke()
 
 	/* Bottom border  */
-	dc.SetRGB(0.0, 0.0, 0.0)
-	dc.SetLineWidth( 1.0 )
-	dc.DrawLine( float64(rect.Left), float64(rect.Bottom), float64(rect.Right), float64(rect.Bottom) )
+	dc.SetRGB(0, 0, 0)
+	dc.SetLineWidth( 1 )
+	dc.DrawLine( rect.Left, rect.Bottom, rect.Right, rect.Bottom )
 	dc.Stroke()
 
 	/* Left border  */
-	dc.SetRGB(0.0, 0.0, 0.0)
-	dc.SetLineWidth( 1.0 )
-	dc.DrawLine( float64(rect.Left), float64(rect.Top), float64(rect.Left), float64(rect.Bottom) )
+	dc.SetRGB(0, 0, 0)
+	dc.SetLineWidth( 1 )
+	dc.DrawLine( rect.Left, rect.Top, rect.Left, rect.Bottom )
 	dc.Stroke()
 
 	/* Right border  */
-	dc.SetRGB(0.0, 0.0, 0.0)
-	dc.SetLineWidth( 1.0 )
-	dc.DrawLine( float64(rect.Right), float64(rect.Top), float64(rect.Right), float64(rect.Bottom) )
+	dc.SetRGB(0, 0, 0)
+	dc.SetLineWidth( 1 )
+	dc.DrawLine( rect.Right, rect.Top, rect.Right, rect.Bottom )
 	dc.Stroke()
 
 }
@@ -377,7 +377,7 @@ func (c *Chart) Render(name string) {
 	dc := gg.NewContext(c.size.Width, c.size.Height)
 
 	/* Clear image */
-	dc.SetRGB(1.0, 1.0, 1.0)
+	dc.SetRGB(255, 255, 255)
 	dc.Clear()
 
 	/* Create and draw grids*/
