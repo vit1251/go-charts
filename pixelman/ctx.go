@@ -101,12 +101,11 @@ func (ctx *Context) Stroke() {
 }
 
 func (ctx *Context) SavePNG(filename string) (error) {
-
 	stream, err1 := os.Create(filename)
 	if err1 != nil {
 		return err1
 	}
-	png.Encode(stream, ctx.i)  
-	//os.Close(stream)
-	return nil
+	defer stream.Close()
+	err2 := png.Encode(stream, ctx.i)  
+	return err2
 }

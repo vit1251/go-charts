@@ -91,10 +91,11 @@ type Grid struct {
 	ScaleY int
 }
 
-func NewGrid() *Grid {
-	g := &Grid{}
-	g.ScaleX = 16
-	g.ScaleY = 16
+func NewGrid(scaleX int, scaleY int) *Grid {
+	g := &Grid{
+		ScaleX: scaleX,
+		ScaleY: scaleY,
+	}
 	return g
 }
 
@@ -104,11 +105,23 @@ type Size struct {
 }
 
 type Chart struct {
-	size Size
-	padding Padding
-	intervals []Interval
-	grid *Grid
-	scale uint8
+	size		Size
+	padding		Padding
+	intervals	[]Interval
+	grid		*Grid
+	scaleX		int
+	scaleY		int
+}
+
+func (c *Chart) SetScale(scaleX int, scaleY int) {
+
+	/* Update scale */
+	c.scaleX = scaleX
+	c.scaleY = scaleY
+
+	/* Setup grid */
+	c.grid = NewGrid(c.scaleX, c.scaleY)
+
 }
 
 func New(width int, height int) (*Chart) {
@@ -126,11 +139,12 @@ func New(width int, height int) (*Chart) {
 	c.padding.Top = 32
 	c.padding.Bottom = 32
 
-	/* Setup grid */
-	c.grid = NewGrid()
+	/* Set scale X and Y */
+	c.scaleX = 8
+	c.scaleY = 8
 
-	/* Setup scale */
-	c.scale = 8
+	/* Setup grid */
+	c.grid = NewGrid(c.scaleX, c.scaleY)
 
 	return c
 }
