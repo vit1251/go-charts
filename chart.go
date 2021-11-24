@@ -3,6 +3,7 @@ package chart
 import (
 	gg "github.com/vit1251/go-charts/pixelman"
 	"log"
+	"image/color"
 )
 
 type Rect struct {
@@ -81,9 +82,10 @@ func NewAxisY(c *Chart) (*AxisY) {
 }
 
 type Interval struct {
-	Y int
-	StartX int
-	StopX int
+	Y		int
+	StartX		int
+	StopX		int
+	Color		color.RGBA
 }
 
 type Grid struct {
@@ -154,6 +156,17 @@ func (c *Chart) RegisterInterval(y int, startX int, stopX int) {
 		Y: y,
 		StartX: startX,
 		StopX: stopX,
+		Color: color.RGBA{128,0,0,255},
+	}
+	c.intervals = append(c.intervals, interval)
+}
+
+func (c *Chart) RegisterIntervalEx(y int, startX int, stopX int, color color.RGBA) {
+	interval := Interval{
+		Y: y,
+		StartX: startX,
+		StopX: stopX,
+		Color: color,
 	}
 	c.intervals = append(c.intervals, interval)
 }
@@ -218,7 +231,7 @@ func (c *Chart) RenderValues(dc *gg.Context) {
 		}
 
 		/* Draw visible interval */
-		dc.SetRGB( 128, 0, 0 )
+		dc.SetRGB( i.Color.R, i.Color.G, i.Color.B )
 		dc.DrawLine( x1, y1, x2, y2 )
 		dc.Stroke()
 	}
